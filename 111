@@ -1,0 +1,702 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>DOGOKU</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg: #050505;
+    --white: #e9e9e9;
+    --muted: #686868;
+    --red: #d52e35;
+    --line: #242424;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    background: var(--bg);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 25px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* EXIT */
+
+.exit {
+    position: fixed;
+    top: 16px;
+    right: 18px;
+    z-index: 100;
+    color: #555;
+    background: transparent;
+    border: none;
+    font-size: 23px;
+    opacity: .35;
+    cursor: pointer;
+}
+
+.exit:hover {
+    opacity: 1;
+}
+
+/* HEADER */
+
+.topline {
+    position: absolute;
+    top: 28px;
+    left: 32px;
+    right: 32px;
+    display: flex;
+    justify-content: space-between;
+    font: 11px 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 2px;
+}
+
+.topline .brand {
+    color: white;
+    font-weight: 600;
+    letter-spacing: 5px;
+}
+
+.bottomline {
+    position: absolute;
+    bottom: 26px;
+    left: 32px;
+    right: 32px;
+    display: flex;
+    justify-content: space-between;
+    color: #505050;
+    font: 10px 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+}
+
+/* CONSENT */
+
+.consent-content {
+    width: 100%;
+    max-width: 440px;
+}
+
+.consent-content h1 {
+    font-size: clamp(38px, 8vw, 65px);
+    letter-spacing: -4px;
+    line-height: 1;
+    margin-bottom: 22px;
+}
+
+.consent-content p {
+    color: #888;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.line {
+    height: 1px;
+    background: var(--line);
+    margin: 28px 0;
+}
+
+.action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    color: black;
+    border: none;
+    padding: 17px 25px;
+    font: 600 11px 'IBM Plex Mono', monospace;
+    letter-spacing: 2px;
+    transition: .2s;
+}
+
+.action:hover {
+    background: #bcbcbc;
+}
+
+/* EYE */
+
+.eye-wrap {
+    width: min(300px, 75vw);
+    animation: eyeIn 1.5s cubic-bezier(.16,1,.3,1);
+}
+
+.eye-wrap svg {
+    width: 100%;
+    overflow: visible;
+}
+
+.eye-shape {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 2.2;
+}
+
+.eye-ring {
+    fill: none;
+    stroke: #aaa;
+    stroke-width: 1;
+}
+
+.eye-pupil {
+    fill: white;
+    animation: pupil 3s ease-in-out infinite;
+}
+
+@keyframes eyeIn {
+    from {
+        opacity: 0;
+        transform: scale(.5);
+        filter: blur(15px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes pupil {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(7px); }
+}
+
+/* TYPEWRITER */
+
+.intro-title {
+    margin-top: 40px;
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 500;
+    letter-spacing: -2px;
+    min-height: 60px;
+}
+
+.type-cursor::after {
+    content: "_";
+    color: var(--red);
+    animation: blink .6s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* WARNING */
+
+.warning-content {
+    width: 100%;
+    max-width: 650px;
+}
+
+.warning-label {
+    color: var(--red);
+    font: 11px 'IBM Plex Mono', monospace;
+    letter-spacing: 4px;
+    margin-bottom: 35px;
+}
+
+.warning-title {
+    font-size: clamp(35px, 8vw, 72px);
+    font-weight: 800;
+    line-height: .98;
+    letter-spacing: -4px;
+    max-width: 650px;
+    min-height: 150px;
+}
+
+.warning-description {
+    color: #858585;
+    font-size: 13px;
+    line-height: 1.8;
+    margin-top: 25px;
+}
+
+.form {
+    max-width: 420px;
+    width: 100%;
+    margin-top: 35px;
+}
+
+.code-input {
+    width: 100%;
+    background: transparent;
+    color: white;
+    border: 1px solid #333;
+    padding: 18px;
+    outline: none;
+    font: 13px 'IBM Plex Mono', monospace;
+    transition: .2s;
+}
+
+.code-input:focus {
+    border-color: #aaa;
+}
+
+.code-input::placeholder {
+    color: #555;
+}
+
+.attempts {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 17px;
+    font: 10px 'IBM Plex Mono', monospace;
+    color: #777;
+    letter-spacing: 1px;
+}
+
+#counter {
+    color: white;
+}
+
+.form .action {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.error {
+    min-height: 20px;
+    margin-top: 14px;
+    color: var(--red);
+    font: 11px 'IBM Plex Mono', monospace;
+}
+
+.shake {
+    animation: shake .25s 2;
+}
+
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* FINISH */
+
+.finished-title {
+    font-size: clamp(32px, 7vw, 60px);
+    letter-spacing: -3px;
+}
+
+@media(max-width: 600px) {
+    .topline {
+        left: 20px;
+        right: 20px;
+        top: 22px;
+    }
+
+    .bottomline {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .warning-title {
+        letter-spacing: -2px;
+        min-height: 130px;
+    }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="scream"
+       src="./horror-scream-high-quality.mp3"
+       preload="auto"></audio>
+
+<button class="exit" aria-label="Выйти"
+        onclick="exitDemo()">×</button>
+
+<!-- CONSENT -->
+
+<section class="screen active" id="consent">
+
+    <div class="topline">
+        <span class="brand">DOGOKU</span>
+        <span>INTERACTIVE EXPERIENCE</span>
+    </div>
+
+    <div class="consent-content">
+
+        <h1>DOGOKU<span style="color:#d52e35">.</span></h1>
+
+        <p class="mono">UNKNOWN EXPERIENCE / 001</p>
+
+        <div class="line"></div>
+
+        <p>
+            Интерактивная хоррор-сцена
+            с полноэкранными визуальными
+            эффектами и звуковым сопровождением.
+        </p>
+
+        <div class="line"></div>
+
+        <p class="mono" style="font-size:10px">
+            SOUND EFFECTS MAY BE LOUD.
+            THIS EXPERIENCE DOES NOT LOCK YOUR DEVICE.
+        </p>
+
+        <br>
+
+        <button class="action" onclick="startDemo()">
+            INITIALIZE EXPERIENCE →
+        </button>
+
+    </div>
+
+    <div class="bottomline">
+        <span>DOGOKU PROJECT</span>
+        <span>VERSION 2.1</span>
+    </div>
+
+</section>
+
+<!-- EYE -->
+
+<section class="screen" id="intro">
+
+    <div class="topline">
+        <span class="brand">DOGOKU</span>
+        <span>01 / DETECTION</span>
+    </div>
+
+    <div class="eye-wrap">
+
+        <svg viewBox="0 0 300 150"
+             xmlns="http://www.w3.org/2000/svg">
+
+            <path class="eye-shape"
+                  d="M5 75 Q150 -25 295 75 Q150 175 5 75Z"/>
+
+            <circle class="eye-ring"
+                    cx="150" cy="75" r="49"/>
+
+            <circle class="eye-pupil"
+                    cx="150" cy="75" r="5"/>
+
+        </svg>
+
+    </div>
+
+    <h1 class="intro-title mono type-cursor"
+        id="introText"></h1>
+
+    <div class="bottomline">
+        <span>CONNECTION ESTABLISHED</span>
+        <span>01 / 02</span>
+    </div>
+
+</section>
+
+<!-- WARNING -->
+
+<section class="screen" id="locked">
+
+    <div class="topline">
+        <span class="brand">DOGOKU</span>
+        <span>02 / ACCESS</span>
+    </div>
+
+    <div class="warning-content">
+
+        <div class="warning-label mono">
+            SYSTEM WARNING
+        </div>
+
+        <h1 class="warning-title type-cursor"
+            id="warningTitle"></h1>
+
+        <p class="warning-description">
+            Введите демонстрационный код
+            для продолжения интерактивной сцены.
+        </p>
+
+        <div class="form">
+
+            <input
+                id="code"
+                class="code-input"
+                type="password"
+                maxlength="32"
+                autocomplete="off"
+                placeholder="ENTER DEMO CODE..."
+            >
+
+            <div class="attempts">
+                <span>REMAINING ATTEMPTS</span>
+                <span id="counter">03</span>
+            </div>
+
+            <div class="error" id="error"></div>
+
+            <button class="action" onclick="checkCode()">
+                CONTINUE →
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="bottomline">
+        <span>DOGOKU</span>
+        <span>02 / 02</span>
+    </div>
+
+</section>
+
+<!-- FINISH -->
+
+<section class="screen" id="finished">
+
+    <div class="topline">
+        <span class="brand">DOGOKU</span>
+        <span>END OF EXPERIENCE</span>
+    </div>
+
+    <h1 class="finished-title">
+        SESSION ENDED.
+    </h1>
+
+    <p class="mono" style="color:#777;margin-top:20px">
+        THE EXPERIENCE IS OVER.
+    </p>
+
+    <button class="action"
+            style="margin-top:35px"
+            onclick="exitDemo()">
+        RETURN →
+    </button>
+
+</section>
+
+<script>
+
+const CONFIG = {
+    introDelay: 1500,
+    typingSpeed: 85,
+    attempts: 3,
+    soundVolume: 0.8
+};
+
+let attempts = CONFIG.attempts;
+let timers = [];
+let generation = 0;
+
+// SCREEN
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+}
+
+// TYPEWRITER
+
+function typeText(element, text, speed, callback) {
+
+    const current = ++generation;
+
+    element.textContent = "";
+    element.classList.add("type-cursor");
+
+    let index = 0;
+
+    function write() {
+
+        if (current !== generation) return;
+
+        if (index < text.length) {
+
+            element.textContent += text[index++];
+
+            timers.push(setTimeout(write, speed));
+
+        } else {
+
+            element.classList.remove("type-cursor");
+
+            if (callback) callback();
+        }
+    }
+
+    write();
+}
+
+// AUDIO
+
+function playSound() {
+
+    const audio = document.getElementById("scream");
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = CONFIG.soundVolume;
+
+    audio.play().catch(error => {
+        console.error("DOGOKU AUDIO ERROR:", error);
+    });
+}
+
+// START
+
+async function startDemo() {
+
+    if (document.documentElement.requestFullscreen) {
+
+        document.documentElement.requestFullscreen()
+            .catch(() => {});
+
+    }
+
+    showScreen("intro");
+
+    timers.push(setTimeout(() => {
+
+        typeText(
+            document.getElementById("introText"),
+            "ВАС ЗАМЕТИЛИ",
+            CONFIG.typingSpeed,
+            () => {
+
+                timers.push(setTimeout(() => {
+
+                    showScreen("locked");
+
+                    // Звук начинается при появлении
+                    // второго заголовка.
+
+                    playSound();
+
+                    typeText(
+                        document.getElementById("warningTitle"),
+                        "ВАШ ТЕЛЕФОН ЗАБЛОКИРОВАН",
+                        55
+                    );
+
+                }, 1000));
+
+            }
+        );
+
+    }, CONFIG.introDelay));
+}
+
+// INPUT
+
+function checkCode() {
+
+    const input = document.getElementById("code");
+    const error = document.getElementById("error");
+
+    if (!input.value.trim()) {
+        error.textContent = "ENTER A DEMO VALUE.";
+        return;
+    }
+
+    // Значение не сохраняется и не отправляется.
+
+    input.value = "";
+
+    attempts--;
+
+    document.getElementById("counter").textContent =
+        String(attempts).padStart(2, "0");
+
+    if (attempts <= 0) {
+
+        showScreen("finished");
+
+        return;
+    }
+
+    error.textContent = "INVALID DEMO ENTRY.";
+
+    const content = document.querySelector(".warning-content");
+
+    content.classList.remove("shake");
+
+    void content.offsetWidth;
+
+    content.classList.add("shake");
+}
+
+// EXIT
+
+async function exitDemo() {
+
+    generation++;
+
+    timers.forEach(clearTimeout);
+    timers = [];
+
+    attempts = CONFIG.attempts;
+
+    document.getElementById("counter").textContent = "03";
+    document.getElementById("code").value = "";
+    document.getElementById("error").textContent = "";
+
+    const audio = document.getElementById("scream");
+
+    audio.pause();
+    audio.currentTime = 0;
+
+    showScreen("consent");
+
+    if (document.fullscreenElement) {
+
+        await document.exitFullscreen().catch(() => {});
+
+    }
+}
+
+</script>
+
+</body>
+</html>
